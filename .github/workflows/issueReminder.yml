@@ -2,25 +2,13 @@ name: Check Open Issues
 
 on:
   schedule:
-    - cron: '45 15 * * *' # Run every day at 9 PM IST
+    - cron: '00 16 * * *' # Run every day at 9 PM IST
 
 jobs:
   check-open-issues:
     runs-on: ubuntu-latest
     
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-          
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          
+    steps:          
       - name: Fetch open issues
         run: |
           python fetch_open_issues.py
