@@ -1,44 +1,26 @@
-name: Issue reminder workflow
+name: Check Open Issues
 
 on:
   schedule:
-    - cron: "00 13 * * *" # Runs at 7:00 PM IST (1:30 PM UTC)
+    - cron: '0 15 * * *' # Run every day at 9 PM IST
 
 jobs:
-  stale:
+  check-open-issues:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Start of Job
-        run: echo "Starting the issue reminder job trial" # Add this line for trial
-      - name: Start of Job
-        run: echo "Starting the issue reminder job" # Add this line to echo a message
-      - name: Reminder message
-        uses: actions/github-script@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { github } = require('@actions/github'); // Remove 'context' from here
-            const message = 'Hi there! This issue is still open. We are looking forward to your response.';
-            github.issues.listForRepo({
-              owner: 'RishitaChourey', // Change owner to RishitaChourey
-              repo: 'CodeBites_PS_2.1.1', // Change repo to CodeBites_PS_2.1.1
-              state: 'open'
-            }).then(async (response) => {
-              for (const issue of response.data) {
-                const { data: assignees } = await github.issues.listAssignees({
-                  owner: 'RishitaChourey', // Change owner to RishitaChourey
-                  repo: 'CodeBites_PS_2.1.1', // Change repo to CodeBites_PS_2.1.1
-                  issue_number: issue.number
-                });
-                const assigneeLogins = assignees.map(assignee => '@' + assignee.login).join(' ');
-                github.issues.createComment({
-                  owner: 'RishitaChourey', // Change owner to RishitaChourey
-                  repo: 'CodeBites_PS_2.1.1', // Change repo to CodeBites_PS_2.1.1
-                  issue_number: issue.number,
-                  body: `${message}\n\nAssignees: ${assigneeLogins}`
-                });
-              }
-            }).catch((error) => {
-              console.error(error);
-              process.exit(1);
-            });
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          
+      - name: Fetch open issues
+        run: |
+          python fetch_open_issues.py
