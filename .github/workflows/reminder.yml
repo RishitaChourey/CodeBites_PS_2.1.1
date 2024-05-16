@@ -1,17 +1,31 @@
-name: 'Reminder'
+name: Comment on Issues 
 
 on:
-  issues:
-  issue_comment:
-    types: [ created ]
+  schedule:
+    - cron: '33 18 * * *' # Runs at 12 AM IST
+
 jobs:
-  welcome:
+  comment-on-issue:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: EddieHubCommunity/gh-action-community/src/welcome@main
+      - name: Comment on Issue
+        uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message:
-            'Hey, @${{ github.actor }}! This issue is still open.We are looking forward for your response.'
-            
+          script: |
+            const issueComment = `
+              This is an automated message to remind you about this issue. 
+              Please provide any updates if needed.`
+            const { data: issues } = await github.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            for (const issue of issues) {
+              github.issues.createComment({
+                issue_number: issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: issueComment
+              })
+            }
