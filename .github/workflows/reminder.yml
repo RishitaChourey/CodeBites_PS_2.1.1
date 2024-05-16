@@ -2,7 +2,7 @@ name: Comment on Issues
 
 on:
   schedule:
-    - cron: '33 18 * * *' # Runs at 12 AM IST
+    - cron: '30 22 * * *'
 
 jobs:
   comment-on-issue:
@@ -14,8 +14,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issueComment = `
-              This is an automated message to remind you about this issue. 
-              Please provide any updates if needed.`
+               Hi there! This issue is still open. We are looking forward to your response.`
             const { data: issues } = await github.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
