@@ -2,7 +2,7 @@ name: Check Open Issues
 
 on:
   schedule:
-    - cron: '00 16 * * *' # Run every day at 9 PM IST
+    - cron: '20 16 * * *' # Run every day at 9 PM IST
 
 jobs:
   check-open-issues:
@@ -11,4 +11,4 @@ jobs:
     steps:          
       - name: Fetch open issues
         run: |
-          python fetch_open_issues.py
+          python "https://github.com/RishitaChourey/CodeBites_PS_2.1.1/blob/main/.github/workflows/fetch_open_issues.py"
