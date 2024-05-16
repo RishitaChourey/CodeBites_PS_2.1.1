@@ -6,7 +6,7 @@ repo_name = "CodeBites_PS_2.1.1"
 github_token = os.environ['GITHUB_TOKEN']
 
 def fetch_open_issues():
-    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/issues"
+    url = f"https://github.com/RishitaChourey/CodeBites_PS_2.1.1/issues?q=is%3Aissue+is%3Aopen+"
     headers = {
         "Authorization": f"Bearer {github_token}",
         "Accept": "application/vnd.github.v3+json"
