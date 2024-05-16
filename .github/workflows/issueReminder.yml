@@ -2,7 +2,7 @@ name: Issue reminder workflow
 
 on:
   schedule:
-    - cron: "15 12 * * *"
+    - cron: "15 13 * * *"
 
 jobs:
   stale:
