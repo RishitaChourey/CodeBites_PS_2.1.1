@@ -1,0 +1,40 @@
+name: Issue reminder workflow
+
+on:
+  schedule:
+    - cron: "15 12 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reminder message
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { github } = require('@actions/github'); // Remove 'context' from here
+            const message = 'Hi there! This issue is still open. We are looking forward to your response.';
+            github.issues.listForRepo({
+              owner: 'RishitaChourey',
+              repo: 'CodeBites_PS_2.1.1',
+              state: 'open'
+            }).then(async (response) => {
+              for (const issue of response.data) {
+                const { data: assignees } = await github.issues.listAssignees({
+                  owner: 'RishitaChourey',
+                  repo: 'CodeBites_PS_2.1.1',
+                  issue_number: issue.number
+                });
+                const assigneeLogins = assignees.map(assignee => '@' + assignee.login).join(' ');
+                github.issues.createComment({
+                  owner: 'RishitaChourey',
+                  repo: 'CodeBites_PS_2.1.1',
+                  issue_number: issue.number,
+                  body: `${message}\n\nAssignees: ${assigneeLogins}`
+                });
+              }
+            }).catch((error) => {
+              console.error(error);
+              process.exit(1);
+            });
