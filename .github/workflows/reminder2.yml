@@ -1,8 +1,8 @@
-name: Comment on Issues 
+name: Comment on Issues
 
 on:
   schedule:
-    - cron: '45 5 * * *'
+    - cron: '03 6 * * *'
 
 jobs:
   comment-on-issue:
@@ -13,19 +13,24 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueComment = `
-             @${{ github.actor }}
-               Hi there! This issue is still open. We are looking forward to your response.`
             const { data: issues } = await github.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open'
             });
+
             for (const issue of issues) {
-              github.issues.createComment({
-                issue_number: issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: issueComment
-              })
+              if (issue.assignees.length > 0) {
+                const assignees = issue.assignees.map(assignee => `@${assignee.login}`).join(' ');
+                const issueComment = `
+                ${assignees}
+                Hi there! This issue is still open. We are looking forward to your response.`;
+
+                await github.issues.createComment({
+                  issue_number: issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: issueComment
+                });
+              }
             }
