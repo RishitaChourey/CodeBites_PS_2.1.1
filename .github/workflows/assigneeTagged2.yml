@@ -3,9 +3,6 @@ name: 'open issue reminder'
 on:
   schedule:
     - cron: '30 9 * * *' 
-  issues:
-    types:
-
 jobs:
   welcome:
     runs-on: ubuntu-latest
