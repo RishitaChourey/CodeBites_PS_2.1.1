@@ -2,9 +2,9 @@ name: 'open issue reminder'
 
 on:
   schedule:
-    - cron: '50 6 * * *' 
+    - cron: '30 9 * * *' 
   issues:
-    types: [assigned]
+    types:
 
 jobs:
   welcome:
