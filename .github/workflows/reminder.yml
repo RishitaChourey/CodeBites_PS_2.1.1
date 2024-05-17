@@ -2,7 +2,7 @@ name: Comment on Issues
 
 on:
   schedule:
-    - cron: '30 22 * * *'
+    - cron: '00 9 * * *'
 
 jobs:
   comment-on-issue:
